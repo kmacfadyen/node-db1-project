@@ -14,14 +14,14 @@ exports.checkAccountPayload = (req, res, next) => {
     error.message = 'name of account must be between 3 and 100'
   }
   else if (typeof budget !== 'number' || isNaN(budget)) { //NaN is actually a number
-    error.message = 'budget of account must be be a number'
+    error.message = 'budget of account must be a number'
   }
   else if (budget < 0 || budget > 1000000) {
     error.message = 'budget of account is too large or too small'
   }  
 
   if (error.message) {
-    next(err)
+    next(error)
   }
   else {
     next()
@@ -35,10 +35,7 @@ exports.checkAccountNameUnique = async (req, res, next) => {
       .first()
 
       if (existing) {
-        next({
-          status: 400,
-          message: 'that name is taken'
-        })
+        next({ status: 400, message: 'that name is taken' })
       }
       else {
         next()
